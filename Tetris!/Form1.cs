@@ -4,6 +4,7 @@ namespace Tetris_
     public partial class Form1 : Form
     {
         Shape currentshape;
+        string text = "";
         int size;
         int[,] map = new int[24, 10];
         int Interval;
@@ -19,7 +20,18 @@ namespace Tetris_
         public void Init()
         {
             score = 0;
-            bestscore = Program.bestscore;
+            if (File.Exists("score.txt"))
+            {
+                using (StreamReader sr = new StreamReader("score.txt", System.Text.Encoding.Default))
+                {
+                    text = sr.ReadToEnd();
+                }
+                bestscore = Convert.ToInt32(text);
+            }
+            else
+            {
+                bestscore = 0;
+            }
             linesremoved = 0;
             size = 25;
             currentshape = new Shape(4, 0);
@@ -136,6 +148,7 @@ namespace Tetris_
                         }
                     }
                     score -= 10;
+                    Program.score = score;
                     if (score > bestscore)
                     {
                         Program.bestscore = score;
@@ -146,23 +159,9 @@ namespace Tetris_
                     }
                     timer1.Tick -= new EventHandler(update);
                     timer1.Stop();
-                    DialogResult result = MessageBox.Show(
-                    "Ваш результат: " + score + ". Начать игру заново?",
-                    "Сообщение",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
-                    if (result == DialogResult.Yes)
-                    {
-                        Init();
-                    }
-                    else if (result == DialogResult.No)
-                    {
-                        this.Hide();
-                        MainMenu menu = new MainMenu();
-                        menu.Show();
-                    }
+                    GameOver gameOver = new GameOver();
+                    gameOver.Show();
+                    this.Hide();
                 }
             }
             Merge();

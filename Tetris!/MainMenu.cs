@@ -37,7 +37,7 @@ namespace Tetris_
             }
             else
             {
-                BestScore.Text = "Лучший счет: " + Program.bestscore;
+                BestScore.Text = "Лучший счет: 0";
             }
         }
         public void Form1_FormClosing(object sender, FormClosingEventArgs e)
