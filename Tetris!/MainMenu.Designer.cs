@@ -38,13 +38,14 @@
             // 
             // StartGame
             // 
+            this.StartGame.BackColor = System.Drawing.Color.Transparent;
             this.StartGame.Font = new System.Drawing.Font("Impact", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.StartGame.Location = new System.Drawing.Point(272, 205);
             this.StartGame.Name = "StartGame";
             this.StartGame.Size = new System.Drawing.Size(240, 80);
             this.StartGame.TabIndex = 0;
             this.StartGame.Text = "button1";
-            this.StartGame.UseVisualStyleBackColor = true;
+            this.StartGame.UseVisualStyleBackColor = false;
             this.StartGame.Click += new System.EventHandler(this.StartGame_Click);
             // 
             // Help
@@ -98,10 +99,10 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(784, 761);
             this.Controls.Add(this.TetrisName);
+            this.Controls.Add(this.BestScore);
             this.Controls.Add(this.StartGame);
             this.Controls.Add(this.Help);
             this.Controls.Add(this.Exit);
-            this.Controls.Add(this.BestScore);
             this.MaximumSize = new System.Drawing.Size(800, 800);
             this.Name = "MainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

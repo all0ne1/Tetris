@@ -22,7 +22,7 @@ namespace Tetris_
             bestscore = Program.bestscore;
             linesremoved = 0;
             size = 25;
-            currentshape = new Shape(3, 0);
+            currentshape = new Shape(4, 0);
             Interval = 300;
             timer1.Interval = Interval;
             timer1.Tick += new EventHandler(update);
@@ -351,15 +351,9 @@ namespace Tetris_
             ShowNextShape(e.Graphics);
         }
     }
-    class Shape
+    class BaseShapes
     {
-        public int x;
-        public int y;
-        public int[,] matrix;
-        public int[,] nextmatrix;
-        public int sizematrix;
-        public int sizenextmatrix;
-        
+        public int[,] baseTetr = new int[4, 4];
         public int[,] tetrI = new int[4, 4]
         {
             {0,0,1,0},
@@ -402,6 +396,15 @@ namespace Tetris_
             {7,7,7 },
             {0,7,0 },
         };
+    }
+    class Shape : BaseShapes
+    {
+        public int x;
+        public int y;
+        public int[,] matrix;
+        public int[,] nextmatrix;
+        public int sizematrix;
+        public int sizenextmatrix;
         public Shape(int _x, int _y)
         {
             x = _x;
@@ -423,33 +426,33 @@ namespace Tetris_
         }
         public int[,] GenerateMatrix()
         {
-            int[,] nmatrix = tetrI;
+            int[,] newmatrix = baseTetr;
             Random r = new Random();
             switch (r.Next(1, 8))
             {
                 case 1:
-                    nmatrix = tetrI;
+                    newmatrix = tetrI;
                     break;
                 case 2:
-                    nmatrix = tetrJ;
+                    newmatrix = tetrJ;
                     break;
                 case 3:
-                    nmatrix = tetrL;
+                    newmatrix = tetrL;
                     break;
                 case 4:
-                    nmatrix = tetrO;
+                    newmatrix = tetrO;
                     break;
                 case 5:
-                    nmatrix = tetrZ;
+                    newmatrix = tetrZ;
                     break;
                 case 6:
-                    nmatrix = tetrS;
+                    newmatrix = tetrS;
                     break;
                 case 7:
-                    nmatrix = tetrT;
+                    newmatrix = tetrT;
                     break;
             }
-            return nmatrix;
+            return newmatrix;
         }
         public void RotateShape()
         {
@@ -462,10 +465,10 @@ namespace Tetris_
                 }
             }
             matrix = tempMatrix;
-            int offset1 = (10 - (x + sizematrix));
-            if (offset1 < 0)
+            int offsetright = (10 - (x + sizematrix));
+            if (offsetright < 0)
             {
-                for (int i = 0; i < Math.Abs(offset1); i++)
+                for (int i = 0; i < Math.Abs(offsetright); i++)
                     MoveLeft();
             }
 

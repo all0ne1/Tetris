@@ -21,6 +21,8 @@ namespace Tetris_
 
         public void Init()
         {
+            TetrisName.BackColor = Color.Transparent;
+            TetrisName.ForeColor = Color.White;
             TetrisName.Text = "TETRIS";
             StartGame.Text = "Играть";
             Help.Text = "Справка";
