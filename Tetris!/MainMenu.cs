@@ -29,10 +29,7 @@ namespace Tetris_
             Exit.Text = "Выход";
             if (File.Exists("score.txt"))
             {
-                using (StreamReader sr = new StreamReader("score.txt", System.Text.Encoding.Default))
-                {
-                    text = sr.ReadToEnd();
-                }
+                text = Score.ReadScore();
                 BestScore.Text = "Лучший счет: " + text;
             }
             else
@@ -42,10 +39,7 @@ namespace Tetris_
         }
         public void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            using (StreamWriter sr = new StreamWriter("score.txt", false, System.Text.Encoding.Default))
-            {
-                sr.WriteLine(text);
-            }
+            Score.WriteScore();
             Application.Exit();
         }
         private void StartGame_Click(object sender, EventArgs e)
@@ -75,10 +69,7 @@ namespace Tetris_
 
         private void Exit_Click(object sender, EventArgs e)
         {
-            using (StreamWriter sr = new StreamWriter("score.txt", false, System.Text.Encoding.Default))
-            {
-                sr.WriteLine(Program.bestscore);
-            }
+            Score.WriteScore();
             Application.Exit();
 
         }

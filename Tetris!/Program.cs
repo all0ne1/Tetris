@@ -2,8 +2,6 @@ namespace Tetris_
 {
     internal static class Program
     {
-        public static int bestscore = 0;
-        public static int score = 0;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

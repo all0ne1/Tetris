@@ -22,12 +22,9 @@ namespace Tetris_
         {
             if (File.Exists("score.txt"))
             {
-                using (StreamReader sr = new StreamReader("score.txt", System.Text.Encoding.Default))
-                {
-                    text = sr.ReadToEnd();
-                }
+                text = Score.ReadScore();
             }
-            GameOverText.Text = $"Вы проиграли :(\n Ваш счет: {Program.score}\n Ваш лучший счет: {text}";
+            GameOverText.Text = $"Вы проиграли :(\n Ваш счет: {Score.score}\n Ваш лучший счет: {text}";
             MainMenuButton.Text = "Меню";
         }
         private void MainMenuButton_Click(object sender, EventArgs e)
@@ -38,6 +35,7 @@ namespace Tetris_
         }
         public void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Score.WriteScore();
             Application.Exit();
         }
     }

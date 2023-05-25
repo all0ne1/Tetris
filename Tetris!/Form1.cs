@@ -18,10 +18,7 @@ namespace Tetris_
             score = 0;
             if (File.Exists("score.txt"))
             {
-                using (StreamReader sr = new StreamReader("score.txt", System.Text.Encoding.Default))
-                {
-                    text = sr.ReadToEnd();
-                }
+                text = Score.ReadScore();
                 bestscore = Convert.ToInt32(text);
             }
             else
@@ -102,14 +99,11 @@ namespace Tetris_
                 {
 
                     score -= 10;
-                    Program.score = score;
+                    Score.score = score;
                     if (score > bestscore)
                     {
-                        Program.bestscore = score;
-                        using (StreamWriter sr = new StreamWriter("score.txt", false, System.Text.Encoding.Default))
-                        {
-                            sr.WriteLine(Program.bestscore);
-                        }
+                        Score.bestscore = score;
+                        Score.WriteScore();
                     }
                     timer1.Tick -= new EventHandler(update);
                     timer1.Stop();
