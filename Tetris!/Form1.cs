@@ -82,7 +82,6 @@ namespace Tetris_
             }
         }
         
-        
         private void update(object? sender, EventArgs e)
         {
             MapControlFunctions.ResetArea();
