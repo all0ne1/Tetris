@@ -3,13 +3,8 @@ namespace Tetris_
 
     public partial class Form1 : Form
     {
-        Shape currentshape;
         string text = "";
-        int size;
-        int[,] map = new int[24, 10];
-        int Interval;
-        int linesremoved;
-        int score;
+        public static int score;
         public int bestscore;
         public Form1()
         {
@@ -32,14 +27,14 @@ namespace Tetris_
             {
                 bestscore = 0;
             }
-            linesremoved = 0;
-            size = 25;
-            currentshape = new Shape(4, 0);
-            Interval = 300;
-            timer1.Interval = Interval;
+            MapControlFunctions.linesremoved = 0;
+            MapControlFunctions.size = 25;
+            MapControlFunctions.currentshape = new Shape(4, 0);
+            MapControlFunctions.Interval = 300;
+            timer1.Interval = MapControlFunctions.Interval;
             timer1.Tick += new EventHandler(update);
             label1.Text = "Score: " + score;
-            label2.Text = "Lines: " + linesremoved;
+            label2.Text = "Lines: " + MapControlFunctions.linesremoved;
             label3.Text = "Next shape: ";
             timer1.Start();
             Invalidate();
@@ -54,29 +49,29 @@ namespace Tetris_
             switch (e.KeyCode)
             {
                 case Keys.W:
-                    if (!IsIntersects())
+                    if (!MapControlFunctions.IsIntersects())
                     {
-                        ResetArea();
-                        currentshape.RotateShape();
-                        Merge();
+                        MapControlFunctions.ResetArea();
+                        MapControlFunctions.currentshape.RotateShape();
+                        MapControlFunctions.Merge();
                         Invalidate();
                     }
                     break;
                 case Keys.D:
-                    if (!CollisionHor(1))
+                    if (!MapControlFunctions.CollisionHor(1))
                     {
-                        ResetArea();
-                        currentshape.MoveRight();
-                        Merge();
+                        MapControlFunctions.ResetArea();
+                        MapControlFunctions.currentshape.MoveRight();
+                        MapControlFunctions.Merge();
                         Invalidate();
                     }
                     break;
                 case Keys.A:
-                    if (!CollisionHor(-1))
+                    if (!MapControlFunctions.CollisionHor(-1))
                     {
-                        ResetArea();
-                        currentshape.MoveLeft();
-                        Merge();
+                        MapControlFunctions.ResetArea();
+                        MapControlFunctions.currentshape.MoveLeft();
+                        MapControlFunctions.Merge();
                         Invalidate();
                     }
                     break;
@@ -86,67 +81,26 @@ namespace Tetris_
             }
         }
         
-        public void ShowNextShape(Graphics g)
-        {
-            for (int i = 0; i < currentshape.sizenextmatrix; i++)
-            {
-                for (int j = 0; j < currentshape.sizenextmatrix; j++)
-                {
-                    if(currentshape.nextmatrix[i, j] == 1)
-                    {
-                        g.FillRectangle(Brushes.Red, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 2)
-                    {
-                        g.FillRectangle(Brushes.Blue, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 3)
-                    {
-                        g.FillRectangle(Brushes.Yellow, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 4)
-                    {
-                        g.FillRectangle(Brushes.Brown, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 5)
-                    {
-                        g.FillRectangle(Brushes.Purple, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 6)
-                    {
-                        g.FillRectangle(Brushes.Orange, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                    if (currentshape.nextmatrix[i, j] == 7)
-                    {
-                        g.FillRectangle(Brushes.Green, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
-                    }
-                }
-            }
-        }
+        
         private void update(object? sender, EventArgs e)
         {
-            ResetArea();
-            if (!Collision())
+            MapControlFunctions.ResetArea();
+            if (!MapControlFunctions.Collision())
             {
-                currentshape.MoveDown();
+                MapControlFunctions.currentshape.MoveDown();
             }
             else
             {
-                Merge();
-                SliceMap();
+                MapControlFunctions.Merge();
+                MapControlFunctions.SliceMap();
                 score += 10;
                 label1.Text = "Score: " + score;
+                label2.Text = "Lines: " + MapControlFunctions.linesremoved;
                 timer1.Interval = 300;
-                currentshape.ResetShape(3, 0);
-                if (Collision())
+                MapControlFunctions.currentshape.ResetShape(3, 0);
+                if (MapControlFunctions.Collision())
                 {
-                    for (int i = 0; i < 24; i++)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            map[i, j] = 0;
-                        }
-                    }
+                    MapControlFunctions.ClearMap();
                     score -= 10;
                     Program.score = score;
                     if (score > bestscore)
@@ -164,10 +118,36 @@ namespace Tetris_
                     this.Hide();
                 }
             }
-            Merge();
+            MapControlFunctions.Merge();
             Invalidate();
         }
-        public void SliceMap()
+        
+
+        private void OnPaint(object sender, PaintEventArgs e)
+        {
+            MapControlFunctions.DrawMap(e.Graphics);
+            MapControlFunctions.DrawGrid(e.Graphics);
+            MapControlFunctions.ShowNextShape(e.Graphics);
+        }
+    }
+    class MapControlFunctions
+    {
+        public static int[,] map = new int[24, 10];
+        public static Shape currentshape;
+        public static int size;
+        public static int Interval;
+        public static int linesremoved;
+        public static void ClearMap()
+        {
+            for (int i = 0; i < 24; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    map[i, j] = 0;
+                }
+            }
+        }
+        public static void SliceMap()
         {
             int curRemovedlines = 0;
             int count = 0;
@@ -176,7 +156,7 @@ namespace Tetris_
                 count = 0;
                 for (int j = 0; j < 10; j++)
                 {
-                    if (map[i,j] != 0)
+                    if (map[i, j] != 0)
                     {
                         count++;
                     }
@@ -193,12 +173,10 @@ namespace Tetris_
                     }
                 }
             }
-            score += 100 * curRemovedlines; 
+            Form1.score += 100 * curRemovedlines;
             linesremoved += curRemovedlines;
-            label1.Text = "Score: " + score;
-            label2.Text = "Lines: " + linesremoved;
         }
-        public bool IsIntersects()
+        public static bool IsIntersects()
         {
             for (int i = currentshape.y; i < currentshape.y + currentshape.sizematrix; i++)
             {
@@ -214,7 +192,7 @@ namespace Tetris_
             return false;
         }
 
-        public void Merge()
+        public static void Merge()
         {
             for (int i = currentshape.y; i < currentshape.y + currentshape.sizematrix; i++)
             {
@@ -227,7 +205,7 @@ namespace Tetris_
                 }
             }
         }
-        public bool Collision()
+        public static bool Collision()
         {
             for (int i = currentshape.y; i <= currentshape.y + currentshape.sizematrix - 1; i++)
             {
@@ -239,7 +217,7 @@ namespace Tetris_
                         {
                             return true;
                         }
-                        if (map[i+1,j] != 0)
+                        if (map[i + 1, j] != 0)
                         {
                             return true;
                         }
@@ -248,7 +226,7 @@ namespace Tetris_
             }
             return false;
         }
-        public bool CollisionHor(int dir)
+        public static bool CollisionHor(int dir)
         {
             for (int i = currentshape.y; i < currentshape.y + currentshape.sizematrix; i++)
             {
@@ -260,13 +238,13 @@ namespace Tetris_
                         {
                             return true;
                         }
-                        if (map[i,j + 1 * dir] != 0)
+                        if (map[i, j + 1 * dir] != 0)
                         {
                             if (j - currentshape.x + 1 * dir >= currentshape.sizematrix || j - currentshape.x + 1 * dir < 0)
                             {
                                 return true;
                             }
-                            if (currentshape.matrix[i - currentshape.y,j - currentshape.x + 1 * dir] == 0)
+                            if (currentshape.matrix[i - currentshape.y, j - currentshape.x + 1 * dir] == 0)
                             {
                                 return true;
                             }
@@ -276,7 +254,7 @@ namespace Tetris_
             }
             return false;
         }
-        public void ResetArea()
+        public static void ResetArea()
         {
             for (int i = currentshape.y; i < currentshape.y + currentshape.sizematrix; i++)
             {
@@ -292,7 +270,7 @@ namespace Tetris_
                 }
             }
         }
-        public void DrawMap(Graphics e) 
+        public static void DrawMap(Graphics e)
         {
             for (int i = 0; i < 24; i++)
             {
@@ -330,7 +308,7 @@ namespace Tetris_
             }
         }
 
-        public void DrawGrid(Graphics g)
+        public static void DrawGrid(Graphics g)
         {
             for (int i = 0; i <= 10; i++)
             {
@@ -342,12 +320,42 @@ namespace Tetris_
             }
 
         }
-
-        private void OnPaint(object sender, PaintEventArgs e)
+        public static void ShowNextShape(Graphics g)
         {
-            DrawMap(e.Graphics);
-            DrawGrid(e.Graphics);
-            ShowNextShape(e.Graphics);
+            for (int i = 0; i < currentshape.sizenextmatrix; i++)
+            {
+                for (int j = 0; j < currentshape.sizenextmatrix; j++)
+                {
+                    if (currentshape.nextmatrix[i, j] == 1)
+                    {
+                        g.FillRectangle(Brushes.Red, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 2)
+                    {
+                        g.FillRectangle(Brushes.Blue, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 3)
+                    {
+                        g.FillRectangle(Brushes.Yellow, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 4)
+                    {
+                        g.FillRectangle(Brushes.Brown, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 5)
+                    {
+                        g.FillRectangle(Brushes.Purple, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 6)
+                    {
+                        g.FillRectangle(Brushes.Orange, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                    if (currentshape.nextmatrix[i, j] == 7)
+                    {
+                        g.FillRectangle(Brushes.Green, new Rectangle(630 + j * size, 250 + i * size, size - 2, size - 2));
+                    }
+                }
+            }
         }
     }
     class BaseShapes
