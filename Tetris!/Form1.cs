@@ -14,6 +14,7 @@ namespace Tetris_
         }
         public void Init()
         {
+            MapControlFunctions.ClearMap();
             score = 0;
             if (File.Exists("score.txt"))
             {
@@ -97,10 +98,10 @@ namespace Tetris_
                 label1.Text = "Score: " + score;
                 label2.Text = "Lines: " + MapControlFunctions.linesremoved;
                 timer1.Interval = 300;
-                MapControlFunctions.currentshape.ResetShape(3, 0);
+                MapControlFunctions.currentshape.ResetShape(4, 0);
                 if (MapControlFunctions.Collision())
                 {
-                    MapControlFunctions.ClearMap();
+                    
                     score -= 10;
                     Program.score = score;
                     if (score > bestscore)
