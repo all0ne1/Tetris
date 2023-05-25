@@ -92,7 +92,7 @@ namespace Tetris_
             else
             {
                 MapControlFunctions.Merge();
-                MapControlFunctions.SliceMap();
+                MapControlFunctions.RemoveLines();
                 score += 10;
                 label1.Text = "Score: " + score;
                 label2.Text = "Lines: " + MapControlFunctions.linesremoved;
@@ -100,7 +100,7 @@ namespace Tetris_
                 MapControlFunctions.currentshape.ResetShape(4, 0);
                 if (MapControlFunctions.Collision())
                 {
-                    
+
                     score -= 10;
                     Program.score = score;
                     if (score > bestscore)
@@ -147,10 +147,10 @@ namespace Tetris_
                 }
             }
         }
-        public static void SliceMap()
+        public static void RemoveLines()
         {
             int curRemovedlines = 0;
-            int count = 0;
+            int count;
             for (int i = 0; i < 24; i++)
             {
                 count = 0;
