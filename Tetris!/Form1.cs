@@ -88,7 +88,7 @@ namespace Tetris_
             }
             else
             {
-                MapControlFunctions.Merge();
+               MapControlFunctions.Merge();
                 MapControlFunctions.RemoveLines();
                 score += 10;
                 label1.Text = "Score: " + score;
@@ -312,7 +312,6 @@ namespace Tetris_
             {
                 g.DrawLine(Pens.Black, new Point(250, 50 + i * size), new Point(500, 50 + i * size));
             }
-
         }
         public static void ShowNextShape(Graphics g)
         {
